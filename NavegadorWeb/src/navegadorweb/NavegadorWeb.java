@@ -49,11 +49,11 @@ public class NavegadorWeb {
     }
 		
 		
-	    public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException, InterruptedException{
-	        InetAddress host = InetAddress.getLocalHost();
-	        NavegadorWeb navegadorWeb = new NavegadorWeb();
-	        navegadorWeb.startConnection(host.getHostName(), 8080);
-	    }
+//	    public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException, InterruptedException{
+//	        InetAddress host = InetAddress.getLocalHost();
+//	        NavegadorWeb navegadorWeb = new NavegadorWeb();
+//	        navegadorWeb.startConnection(host.getHostName(), 8080);
+//	    }
     
 
 	
