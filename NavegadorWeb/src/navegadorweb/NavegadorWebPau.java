@@ -23,69 +23,57 @@ import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
 
 public class NavegadorWebPau {
-	
-	public static void descargarImagen(String path) throws IOException {
+
+	public static String descargarImagen(String path) throws IOException {
 		String path1 = "C:/Users/erick/Documents/NavegadorWebs/";
 		String pathDir = getSubstring("/", path);
 		File file = new File(path1 + pathDir);
 		file.mkdirs();
 		File imagen = new File(path1 + path);
-        URL obj = new URL("http://localhost:8080/" + path);
-		HttpURLConnection con = (HttpURLConnection)obj.openConnection();
+		URL obj = new URL("http://localhost:8080/" + path);
+		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 		con.setRequestMethod("GET");
-		
-        BufferedImage image = ImageIO.read(obj);
-
+		BufferedImage image = ImageIO.read(obj);
 		ImageIO.write(image, "png", imagen);
-	
-	}
-	
+		return imagen.getPath();
 
-	
-	
-	
-	 public static String getSubstring(String a, String b) {
-		
-		 String substring = b.split(a)[0];
-		 return substring;
-	 }
+	}
+
+	public static String getSubstring(String a, String b) {
+		String substring = b.split(a)[0];
+		return substring;
+	}
 
 	public static void main(String[] args) throws IOException {
-		// TODO Auto-generated method stub'
-//		Scanner scan = new Scanner(System.in);
-		//System.out.println("a que web te quieres conectar?");
-//		String url = scan.nextLine();
 		URL obj = new URL("http://localhost:8080");
-		HttpURLConnection con = (HttpURLConnection)obj.openConnection();
+		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 		con.setRequestMethod("GET");
+		String path = "C:/Users/erick/Documents/NavegadorWebs/argumentos.html";
+		File file = new File(path);
+		BufferedWriter bw = new BufferedWriter(new FileWriter(file));
 		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-		
-		 String inputLine;
-		 String path = "C:/Users/erick/Documents/NavegadorWebs/argumentos.html";
-		 File file = new File(path);
-		 BufferedWriter bw  = new BufferedWriter(new FileWriter(file)); 
-	        while ((inputLine = in.readLine()) != null) {
-	        	if(inputLine.contains("<img") && inputLine.contains("src")) {
-	        		String urlimg = "";
-	        		for(int i = 0; i < inputLine.length(); i++) {
-	        			if (inputLine.substring(i).startsWith("src")) {
-	        				urlimg = inputLine.substring(i);
-	        				urlimg = urlimg.split("\"")[1];
-	        				System.out.println(urlimg);
-	        				descargarImagen(urlimg);
-	        				
-	        			}
-	        		}
-//	        		String primerSplit = inputLine.split("src=")[1];
-//	        		String segundosplit = primerSplit.split("\"")[1];
-//	        		System.out.println("Primer split: " + primerSplit + "Segundo split: " + segundosplit);
-	        	}
-	        	bw.write(inputLine);
-	   
-	        }
+		String inputLine;
+		String urlimg;
+		String nuevoPath;
+		while ((inputLine = in.readLine()) != null) {
+			if (inputLine.contains("<img") && inputLine.contains("src")) {
+				urlimg = "";
+				for (int i = 0; i < inputLine.length(); i++) {
+					if (inputLine.substring(i).startsWith("src")) {
+						urlimg = inputLine.substring(i);
+						urlimg = urlimg.split("\"")[1];
+						//System.out.println(urlimg);
+						nuevoPath = descargarImagen(urlimg);
+						inputLine.replaceAll(urlimg, nuevoPath);
+					}
+				}
+			}
+			bw.write(inputLine);
+
+		}
 		bw.close();
 		in.close();
-		
+
 	}
 
 }
