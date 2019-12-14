@@ -34,16 +34,21 @@ public class NavegadorWeb {
 		File imagen = new File(path1 + path);
 		if(imagen.exists() && !imagen.isDirectory()) { 
 			   con.setIfModifiedSince(imagen.lastModified());
-			}
+		}
+		int responseCode =  con.getResponseCode();
+		System.out.println("Response Code: " + responseCode);
 		
-		System.out.println("Response Code: " + con.getResponseCode());
-		System.out.println("Content-Type = " + con.getContentType());
-        System.out.println("Content-Length = " + con.getContentLength());
-        System.out.println("Cache-Control = " + con.getHeaderField("Cache-Control"));
-        System.out.println("Last-modified = " + con.getHeaderField("Last-Modified"));
-		String tipo = nombreImagen.split("\\.")[1];
-		BufferedImage image = ImageIO.read(obj);
-		ImageIO.write(image, tipo, imagen);
+		if(responseCode == HttpURLConnection.HTTP_ACCEPTED ) {
+			System.out.println("Content-Type = " + con.getContentType());
+	        System.out.println("Content-Length = " + con.getContentLength());
+	        System.out.println("Cache-Control = " + con.getHeaderField("Cache-Control"));
+	        System.out.println("Last-modified = " + con.getHeaderField("Last-Modified"));
+			String tipo = nombreImagen.split("\\.")[1];
+			BufferedImage image = ImageIO.read(obj);
+			ImageIO.write(image, tipo, imagen);
+		}
+		
+		
 		System.out.println(" [OK] " + nombreImagen);
 
 	}
@@ -79,7 +84,8 @@ public class NavegadorWeb {
 			
 			int responseCode = con.getResponseCode();
 			System.out.println("Response Code: " + responseCode + ".");
-			if (responseCode == HttpURLConnection.HTTP_OK) {
+			if (responseCode == HttpURLConnection.HTTP_OK || 
+					responseCode == HttpURLConnection.HTTP_NOT_MODIFIED) {
 				System.out.println("Content-Type = " + con.getContentType());
 	            System.out.println("Content-Length = " + con.getContentLength());
 	            System.out.println("Content-Type = " + con.getHeaderField("Content-Type"));	            
