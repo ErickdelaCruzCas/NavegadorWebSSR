@@ -26,13 +26,21 @@ public class NavegadorWeb {
 		String nombreImagen = getNombreArchivo("/", path);
 		File file = new File(path1 + path.replace(nombreImagen, ""));
 		file.mkdirs();
-		File imagen = new File(path1 + path);
-		URL obj = new URL(web + path);
+//		File imagen = new File(path1 + path);
+		URL obj = new URL(web + path);		
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 		con.setRequestMethod("GET");
+		
+		File imagen = new File(path1 + path);
+		if(imagen.exists() && !imagen.isDirectory()) { 
+			   con.setIfModifiedSince(imagen.lastModified());
+			}
+		
 		System.out.println("Response Code: " + con.getResponseCode());
 		System.out.println("Content-Type = " + con.getContentType());
         System.out.println("Content-Length = " + con.getContentLength());
+        System.out.println("Cache-Control = " + con.getHeaderField("Cache-Control"));
+        System.out.println("Last-modified = " + con.getHeaderField("Last-Modified"));
 		String tipo = nombreImagen.split("\\.")[1];
 		BufferedImage image = ImageIO.read(obj);
 		ImageIO.write(image, tipo, imagen);
@@ -60,20 +68,26 @@ public class NavegadorWeb {
 			URL obj = new URL(web);
 			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 			con.setRequestMethod("GET");
+
+			String[] nombre = web.split("\\.");
+//			String path = "C:/Users/Usuario/Desktop/PruebasNavegador/" + nombre[1] + ".html";  Alex
+				String path = "C:/Users/erick/Desktop/PruebasNavegador/" + nombre[1] + ".html";
+				File file = new File(path);							
+				if(file.exists() && !file.isDirectory()) { 
+				   con.setIfModifiedSince(file.lastModified());
+				}
+			
 			int responseCode = con.getResponseCode();
 			System.out.println("Response Code: " + responseCode + ".");
 			if (responseCode == HttpURLConnection.HTTP_OK) {
-				
-				
 				System.out.println("Content-Type = " + con.getContentType());
 	            System.out.println("Content-Length = " + con.getContentLength());
-	            Map<String, List<String>> headers = con.getHeaderFields();
-				
-				String[] nombre = web.split("\\.");
-//			String path = "C:/Users/Usuario/Desktop/PruebasNavegador/" + nombre[1] + ".html";  Alex
-				String path = "C:/Users/erick/Desktop/PruebasNavegador/" + nombre[1] + ".html";
+	            System.out.println("Content-Type = " + con.getHeaderField("Content-Type"));	            
+	            System.out.println("Cache-Control = " + con.getHeaderField("Cache-Control"));
+	            System.out.println("Last-modified = " + con.getHeaderField("Last-Modified"));
 
-				File file = new File(path);
+
+				
 				BufferedWriter bw = new BufferedWriter(
 						new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8));
 				BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
@@ -86,7 +100,6 @@ public class NavegadorWeb {
 							if (inputLine.substring(i).startsWith("src")) {
 								urlimg = inputLine.substring(i);
 								urlimg = urlimg.split("\"")[1];
-								// System.out.println(urlimg);
 								if (!urlimg.contains(".gif")) {
 									descargarImagen(urlimg, web);
 									inputLine = inputLine.replace(urlimg, urlimg.substring(1));
