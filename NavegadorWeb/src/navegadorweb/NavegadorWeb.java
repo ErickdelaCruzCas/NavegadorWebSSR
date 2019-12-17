@@ -65,9 +65,10 @@ public class NavegadorWeb {
 		while (true) {
 			sc = new Scanner(System.in);
 			System.out.println("Introduce la web y el puerto: ");
-			String web = sc.nextLine();						
+			String web = sc.nextLine();
 			if(web.equals("exit")) {
-				break;
+				System.out.println("Adios!");
+				break;				
 			}
 			
 			URL obj = new URL(web);
@@ -122,6 +123,7 @@ public class NavegadorWeb {
 					bw.write(inputLine);
 
 				}
+				bw.flush();
 				bw.close();
 				in.close();
 				System.out.println("[DONE]");
