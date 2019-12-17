@@ -22,7 +22,7 @@ public class NavegadorWeb {
 	//codejava.net/java-se/networking/use-httpurlconnection-to-download-file-from-an-http-url
 
 	public static void descargarImagen(String path, String web) throws IOException {
-		String path1 = "C:/Users/erick/Desktop/PruebasNavegador";
+		String path1 =  System.getProperty("user.home") + "/Desktop/Webs/";
 		String nombreImagen = getNombreArchivo("/", path);
 		File file = new File(path1 + path.replace(nombreImagen, ""));
 		file.mkdirs();
@@ -38,7 +38,7 @@ public class NavegadorWeb {
 		int responseCode =  con.getResponseCode();
 		System.out.println("Response Code: " + responseCode);
 		
-		if(responseCode == HttpURLConnection.HTTP_ACCEPTED ) {
+		if(responseCode == HttpURLConnection.HTTP_OK ) {
 			System.out.println("Content-Type = " + con.getContentType());
 	        System.out.println("Content-Length = " + con.getContentLength());
 	        System.out.println("Cache-Control = " + con.getHeaderField("Cache-Control"));
@@ -76,8 +76,12 @@ public class NavegadorWeb {
 
 			String[] nombre = web.split("\\.");
 //			String path = "C:/Users/Usuario/Desktop/PruebasNavegador/" + nombre[1] + ".html";  Alex
-				String path = "C:/Users/erick/Desktop/PruebasNavegador/" + nombre[1] + ".html";
-				File file = new File(path);							
+//				String path = "C:/Users/erick/Desktop/PruebasNavegador/" + nombre[1] + ".html";
+				String path = System.getProperty("user.home") + "/Desktop/Webs";
+				String path1 = System.getProperty("user.home") + "/Desktop/Webs/"+ nombre[1] + ".html";
+				File file1 = new File(path);
+				file1.mkdirs();
+				File file = new File(path1);
 				if(file.exists() && !file.isDirectory()) { 
 				   con.setIfModifiedSince(file.lastModified());
 				}
