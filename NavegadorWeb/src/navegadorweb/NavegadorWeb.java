@@ -48,7 +48,12 @@ public class NavegadorWeb {
 			ImageIO.write(image, tipo, imagen);
 		}
 		
-		
+
+
+		System.out.println(" [OK] " + nombreImagen);
+		System.out.println(" [OK] " + nombreImagen);
+		System.out.println(" [OK] " + nombreImagen);
+		System.out.println(" [OK] " + nombreImagen);
 		System.out.println(" [OK] " + nombreImagen);
 
 	}
